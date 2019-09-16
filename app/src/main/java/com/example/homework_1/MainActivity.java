@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-
         }
 
         @Override
@@ -98,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
             String url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + formattedQuery + "&key=AIzaSyAxU0GQ13rtrBx7Y6_CnjSByzX3AE0hvfQ";
             Log.e(TAG, "url search " + url);
             String jsonStr = sh.makeServiceCall(url);
-
 
 
             Log.e(TAG, "Response from url: " + jsonStr);
