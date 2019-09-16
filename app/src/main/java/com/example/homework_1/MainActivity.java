@@ -10,6 +10,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -19,9 +20,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,12 +28,14 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String TAG = MainActivity.class.getSimpleName();
-    private ListView lv;
+     String TAG = MainActivity.class.getSimpleName();
 
-    ArrayList<HashMap<String, String>> contactList;
 
-    SearchView searchView;
+    private HashMap<String, Double> lat_lng;
+
+     String formattedQuery= new String();
+
+
 
 
     @Override
@@ -48,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.container, MainFragment.newInstance())
                     .commitNow();
         }
-        contactList = new ArrayList<>();
-        lv = (ListView) findViewById(R.id.list);
-        new GetContacts().execute();
+        lat_lng = new HashMap<>();
+
+
 
 
     }
@@ -66,12 +66,22 @@ public class MainActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT);
         myToast.show();
 
+        SearchView searchView = (SearchView) findViewById(R.id.InputLocation);
 
+        String query = searchView.getQuery().toString();
+
+        for(String word : query.split(" ") ){
+            formattedQuery = formattedQuery + "+" + word;
+        }
+
+        Log.e(TAG, "formatted text output " + formattedQuery);
+
+        new GetCoordinates().execute();
 
 
     }
 
-    private class GetContacts extends AsyncTask<Void, Void, Void> {
+    private class GetCoordinates extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -85,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
 
             HttpHandler sh = new HttpHandler();
             // Making a request to url and getting response
-            String url = "https://api.androidhive.info/contacts/";
+            String url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + formattedQuery + "&key=AIzaSyAxU0GQ13rtrBx7Y6_CnjSByzX3AE0hvfQ";
+            Log.e(TAG, "url search " + url);
             String jsonStr = sh.makeServiceCall(url);
 
 
@@ -99,36 +110,18 @@ public class MainActivity extends AppCompatActivity {
                     JSONArray results = jsonObj.getJSONArray("results");
 
                     //Getting the geometry
-                    JSONArray geometry = results.getJSONObject(1).getJSONArray("geometry");
+                    JSONObject geometry =  results.getJSONObject(0).getJSONObject("geometry");
 
 
-                    // looping through All Contacts
-                    for (int i = 0; i < geometry.length();i++){
-                        JSONObject c = results.getJSONObject(i);
-                        String id = c.getString("id");
-                        String name = c.getString("name");
-                        String email = c.getString("email");
-                        String address = c.getString("address");
-                        String gender = c.getString("gender");
+                    //Getting the Location which is under geometry
+                    JSONObject location = geometry.getJSONObject("location");
 
-                        // Phone node is JSON Object
-                        JSONObject phone = c.getJSONObject("phone");
-                        String mobile = phone.getString("mobile");
-                        String home = phone.getString("home");
-                        String office = phone.getString("office");
+                    Double latitude = location.getDouble("lat");
+                    Double longitude = location.getDouble("lng");
 
-                        // tmp hash map for single contact
-                        HashMap<String, String> contact = new HashMap<>();
+                    lat_lng.put("lat", latitude);
+                    lat_lng.put("lng", longitude);
 
-                        // adding each child node to HashMap key => value
-                        contact.put("id", id);
-                        contact.put("name", name);
-                        contact.put("email", email);
-                        contact.put("mobile", mobile);
-
-                        // adding contact to contact list
-                        contactList.add(contact);
-                    }
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
                     runOnUiThread(new Runnable() {
@@ -160,10 +153,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            ListAdapter adapter = new SimpleAdapter(MainActivity.this, contactList,
-                    R.layout.list_item, new String[]{ "email","mobile"},
-                    new int[]{R.id.email, R.id.mobile});
-            lv.setAdapter(adapter);
+            TextView showTemp = (TextView) findViewById(R.id.tempVal);
+            TextView showSpeed = (TextView) findViewById(R.id.speedVal);
+            showTemp.setText(Double.toString(lat_lng.get("lat")));
+            showSpeed.setText(Double.toString(lat_lng.get("lng")));
+
         }
     }
 
