@@ -69,9 +69,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_weight="1"
-            android:background="@color/cardview_light_background"
+            android:background="@color/light_background"
             android:gravity="center"
-            android:text="Temperature"
+            android:text="@string/temp"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -113,9 +113,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_weight="1"
-            android:background="@color/cardview_light_background"
+            android:background="@color/light_background"
             android:gravity="center"
-            android:text="Humidity"
+            android:text="@string/humidity"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -157,9 +157,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_weight="1"
-            android:background="@color/cardview_light_background"
+            android:background="@color/light_background"
             android:gravity="center"
-            android:text="Wind Speed"
+            android:text="@string/wind"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -201,9 +201,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_weight="1"
-            android:background="@color/cardview_light_background"
+            android:background="@color/light_background"
             android:gravity="center"
-            android:text="Precipitation"
+            android:text="@string/precipitation"
             android:textSize="24sp"
             android:textStyle="bold" />
 

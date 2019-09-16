@@ -2,4 +2,8 @@
     <string name="weather">Weather Report</string>
     <string name="app_name">Android App</string>
     <string name="Search">Search</string>
+    <string name="temp">Temperature</string>
+    <string name="wind">Wind Speed</string>
+    <string name="humidity">Humidity</string>
+    <string name="precipitation">Precipitation</string>
 </resources>
