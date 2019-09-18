@@ -8,7 +8,7 @@
     android:background="#0000D0FF"
     tools:context=".MainActivity">
 
-
+    <!-- Muhammad driving now -->
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
@@ -42,7 +42,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-
 
         />
 
@@ -230,5 +229,8 @@
         app:layout_constraintBottom_toTopOf="@+id/temperature"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/InputLocation" />
+
+
+    <!-- Muhammad Stopped-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

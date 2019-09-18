@@ -30,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 
 
@@ -37,6 +38,7 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Miguel started driving
     String TAG = MainActivity.class.getSimpleName();
 
     String url = new String();
@@ -83,14 +85,18 @@ public class MainActivity extends AppCompatActivity {
 
         String query = searchView.getQuery().toString();
 
-        for (String word : query.split(" ")) {
-            formattedQuery = formattedQuery + "+" + word;
+        if(query.length() != 0){
+            for (String word : query.split(" ")) {
+                formattedQuery = formattedQuery + "+" + word;
+            }
+
+            Log.e(TAG, "formatted text output " + formattedQuery);
+
+            new GetCoordinates().execute();
         }
-
-        Log.e(TAG, "formatted text output " + formattedQuery);
-
-        new GetCoordinates().execute();
-
+        else {
+            Toast.makeText(this, "Invalid Input", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -102,20 +108,22 @@ public class MainActivity extends AppCompatActivity {
         final TextView showPrecipitation = (TextView) findViewById(R.id.preciVal);
 
 
-        weatherDataURL = "https://api.darksky.net/forecast/b83b1a21964642d7c104391dc410beb9/" + lat_lng.get("lat").toString() + "," + lat_lng.get("lng").toString();
-        Log.e(TAG, "weather URL:" + weatherDataURL);
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, weatherDataURL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+        if(lat_lng.get("lat") != null || lat_lng.size() != 0){
+            // Miguel stooped and Muhammad started driving
+            weatherDataURL = "https://api.darksky.net/forecast/b83b1a21964642d7c104391dc410beb9/" + lat_lng.get("lat").toString() + "," + lat_lng.get("lng").toString();
+            Log.e(TAG, "weather URL:" + weatherDataURL);
+            // Request a string response from the provided URL.
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, weatherDataURL,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
 
-                        Log.e(TAG, "url search " + response);
-                        if (response != null) {
-                            try {
-                                JSONObject jsonObj = new JSONObject(response);
+                            Log.e(TAG, "url search " + response);
+                            if (response != null) {
+                                try {
+                                    JSONObject jsonObj = new JSONObject(response);
 
-                                JSONObject currently =  jsonObj.getJSONObject("currently");
+                                    JSONObject currently =  jsonObj.getJSONObject("currently");
 
 //                                //Getting the weather data
 //                                JSONObject temperature = currently.getJSONObject("temperature");
@@ -125,82 +133,117 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                                //Get Doubles from JSON objects
-                                Double temperatureDouble = currently.getDouble("temperature");
-                                Double humidityDouble = currently.getDouble("humidity");
-                                Double windSpeedDouble = currently.getDouble("windSpeed");
-                                Double precipProbabilityDouble = currently.getDouble("precipProbability");
+                                    //Get Doubles from JSON objects
+                                    Double temperatureDouble = currently.getDouble("temperature");
+                                    Double humidityDouble = currently.getDouble("humidity");
+                                    Double windSpeedDouble = currently.getDouble("windSpeed");
+                                    Double precipProbabilityDouble = currently.getDouble("precipProbability");
 
-                                //Put values in textViews
-                                showTemp.setText(temperatureDouble.toString());
-                                showSpeed.setText(windSpeedDouble.toString());
-                                showHumidity.setText(humidityDouble.toString());
-                                showPrecipitation.setText(precipProbabilityDouble.toString());
+                                    //Put values in textViews
+                                    showTemp.setText(temperatureDouble.toString());
+                                    showSpeed.setText(windSpeedDouble.toString());
+                                    showHumidity.setText(humidityDouble.toString());
+                                    showPrecipitation.setText(precipProbabilityDouble.toString());
 
+                                    // Muhammad stopped and Miguel started driving
+                                } catch (final JSONException e) {
+                                    Log.e(TAG, "Json parsing error: " + e.getMessage());
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(getApplicationContext(),
+                                                    "Json parsing error: " + e.getMessage(),
+                                                    Toast.LENGTH_LONG).show();
+                                        }
+                                    });
 
-                            } catch (final JSONException e) {
-                                Log.e(TAG, "Json parsing error: " + e.getMessage());
+                                }
+
+                            } else {
+
+                                Toast.makeText(getApplicationContext(),
+                                        "No Input!",
+                                        Toast.LENGTH_LONG).show();
+
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         Toast.makeText(getApplicationContext(),
-                                                "Json parsing error: " + e.getMessage(),
+                                                "Invalid or no weather provided!",
                                                 Toast.LENGTH_LONG).show();
                                     }
                                 });
-
                             }
 
-                        } else {
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getApplicationContext(),
-                                            "Invalid or no weather provided!",
-                                            Toast.LENGTH_LONG).show();
-                                }
-                            });
                         }
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "That didn't work ");
-            }
-        });
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "That didn't work ");
+                }
+            });
 
 // Add the request to the RequestQueue.
-        requestQueue.add(stringRequest);
+            requestQueue.add(stringRequest);
+        }
+        else{
+            Toast.makeText(getApplicationContext(),
+                                    "Invalid or no weather provided!",
+                                    Toast.LENGTH_LONG).show();
+        }
+
     }
 
     private class GetCoordinates extends AsyncTask<Void, Void, Void> {
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
+        protected void onPreExecute()throws RuntimeException {
+            try {
+                super.onPreExecute();
+            }
+            catch (RuntimeException e){
+                throw e;
+            }
         }
 
         @Override
-        protected Void doInBackground(Void... arg0) {
+        protected Void doInBackground(Void... arg0)throws RuntimeException {
 
-
+            // Miguel stopped and Muhammad started driving
             HttpHandler sh = new HttpHandler();
             // Making a request to url and getting response
             url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + formattedQuery + "&key=AIzaSyAxU0GQ13rtrBx7Y6_CnjSByzX3AE0hvfQ";
+            formattedQuery = "";
             Log.e(TAG, "url search " + url);
             String jsonStr = sh.makeServiceCall(url);
 
 
             Log.e(TAG, "Response from url: " + jsonStr);
             if (jsonStr != null) {
+
+                JSONArray results= new JSONArray();
                 try {
                     JSONObject jsonObj = new JSONObject(jsonStr);
 
                     // Getting JSON Array node
-                    JSONArray results = jsonObj.getJSONArray("results");
+                    results = jsonObj.getJSONArray("results");
 
+                    if(results.length() == 0){
+
+                        Thread thread = new Thread(){
+                            public void run(){
+                                runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        Toast.makeText(getApplicationContext(), "Invalid Input", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+                        };
+                        thread.start();
+
+//                        Toast.makeText(getApplicationContext(),
+//                                "Invalid or no weather provided!",
+//                                Toast.LENGTH_LONG).show();
+                    }
                     //Getting the geometry
                     JSONObject geometry = results.getJSONObject(0).getJSONObject("geometry");
 
@@ -211,23 +254,32 @@ public class MainActivity extends AppCompatActivity {
                     Double latitude = location.getDouble("lat");
                     Double longitude = location.getDouble("lng");
 
+                    lat_lng.clear();
                     lat_lng.put("lat", latitude);
                     lat_lng.put("lng", longitude);
 
+                // Muhammad stopped and Miguel started driving
                 } catch (final JSONException e) {
-                    Log.e(TAG, "Json parsing error: " + e.getMessage());
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(),
-                                    "Json parsing error: " + e.getMessage(),
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    });
 
+                    if(results.length() != 0){
+                        Log.e(TAG, "Json parsing error: " + e.getMessage());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(),
+                                        "Json parsing error: " + e.getMessage(),
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
                 }
 
             } else {
+
+                Toast.makeText(getApplicationContext(),
+                        "Invalid or no weather provided!",
+                        Toast.LENGTH_LONG).show();
+
                 Log.e(TAG, "Couldn't get json from server.");
                 runOnUiThread(new Runnable() {
                     @Override
@@ -249,6 +301,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-
+    // Miguel stopped
     }
 }

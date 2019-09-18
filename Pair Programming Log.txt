@@ -1,0 +1,11 @@
+Pair Programming Log
+
+9/13, 7:30PM - 8:30PM, EER Lobby, Muhammad and Miguel spent 1 hour figuring out what needs to be done, 1 hour
+9/14, 1:00PM - 4:00PM, EER Lab room, Finished the user interface, Muhammad was in driving seat, 3 hours
+9/15, 7:30PM - 1:30AM, EER Lab room, Muhammad and Miguel finished displaying all information, Miguel was in driving seat 4 hours, Muhammad was in driving seat 2 hours, 6 hours
+9/16, 9:00PM - 10:00PM, EER Study room, Muhammad and Miguel started working on Map display, Muhammad was in driving seat, 1 hour
+9/17, 3:00PM - 6:00PM, EER study room, Fixing Map Display, Muhammad was in driving seat, 2 hours
+9/17, 7:00PM - 11:00PM, EER Lobby, Fixing Map Display, Miguel was in driving seat, 4 hours
+9/17, 11:00PM - 11:59PM, EER Lobby, Finalizing everything, Muhammad was in driving seat, 1 hour
+
+total time 18 hours, 15 hours of pair programming
